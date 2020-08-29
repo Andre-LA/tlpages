@@ -18,27 +18,28 @@ local function element_to_string(element, level)
   local indentation = string.rep('  ', level)
   local next_indentation = string.rep('  ', level+1)
 
-  local element_len = #element
-  local is_string_content = element_len > 0 and type(element[1]) == 'string'
+  local elements_count = 0
   local element_content = {}
 
-  if is_string_content then
-    element_content[1] = element[1]
-  else
-    for i = 1, element_len do
-      table.insert(element_content, '\n' .. next_indentation .. element[i]:tostring(level + 1))
+  for i = 1, #element do
+    local content_i_str;
+
+    if type(element[i]) == 'string' then
+      content_i_str = element[i]
+    else
+      elements_count = elements_count + 1
+      content_i_str = element[i]:tostring(level + 1)
     end
+
+    table.insert(element_content, '\n' .. next_indentation .. content_i_str)
   end
 
-  local tag_str = tag:tostring(false, element.attributes)
-  local content_str = table.concat(element_content)
-  local closing_tag = #element > 0 and tag:tostring(true) or ''
+  local opening_tag = tag:tostring(false, element.attributes)
+  local content = table.concat(element_content)
+  local should_close = #content > 0
+  local closing_tag = should_close and '\n' .. indentation .. tag:tostring(true) or ''
 
-  if not is_string_content and #closing_tag > 0 then
-    closing_tag = '\n' .. indentation .. closing_tag
-  end
-
-  return string.format('%s%s%s', tag_str, content_str, closing_tag)
+  return string.format('%s%s%s', opening_tag, content, closing_tag)
 end
 
 local Element = {}
@@ -78,14 +79,8 @@ function Element.is_element(element)
   for i = 1, #element do
     local i_type = type(element[i])
 
-    if i == 1 then
-      if i_type ~= 'string' and i_type ~= 'table' then
-        table.insert(errors, errmsgs.simple_wrongtypes("elements[1]", {'string', 'table'}, i_type))
-      end
-    else
-      if i_type ~= 'table' then
-        table.insert(errors, errmsgs.simple_wrongtypes("elements[" .. i .. "]", {'table'}, i_type))
-      end
+    if i_type ~= 'string' and i_type ~= 'table' then
+      table.insert(errors, errmsgs.simple_wrongtypes("elements[1]", {'string', 'table'}, i_type))
     end
   end
 
@@ -96,23 +91,13 @@ function Element.is_element(element)
   end
 end
 
-function Element.new(tag, attributes_or_content, ...)
-  local using_attributes = (
-    attributes_or_content and -- is not nil
-    type(attributes_or_content) == 'table' and  -- is not a (string) content
-    #attributes_or_content == 0 and -- doens't contains array elements
-    Element.is_element(attributes_or_content) == false -- is not nested elements
-  )
-
+function Element.new(tag, attributes, ...)
   local element_table = {
     tag = tag,
-    attributes = using_attributes and attributes_or_content or nil,
+    attributes = attributes,
   }
 
   local content = {...}
-  if not using_attributes then
-    table.insert(content, 1, attributes_or_content)
-  end
   table.move(content, 1, #content, 1, element_table)
 
   local ok_element, err = Element.is_element(element_table)

@@ -1,6 +1,9 @@
 local errmsgs = require 'errmsgs'
 local element, tag = require 'lpages.element', require 'lpages.tag'
 
+-- TODO:
+-- Categorize contents (https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Content_categories)
+
 local tags = {
   html = tag.new'html',
 
@@ -9,7 +12,10 @@ local tags = {
   title = tag.new'title',
 
   body = tag.new'body',
+
   img = tag.new'img',
+  p = tag.new'p',
+  strong = tag.new'strong',
 }
 
 local elements = {}
@@ -57,7 +63,7 @@ function elements.html(html_elements)
     error(errmsgs.multiple_msgs(errors))
   end
 
-  return element.new(tags.html, html_elements[1], html_elements[2])
+  return element.new(tags.html, nil, html_elements[1], html_elements[2])
 end
 
 function elements.head(head_elements)
@@ -68,14 +74,14 @@ function elements.head(head_elements)
     assert(element.is_element(head_elements[i]), errmsgs.simple_wrongtypes('head_elements['..i..']', {'Element'}, type(head_elements[i])))
   end
 
-  return element.new(tags.head, table.unpack(head_elements))
+  return element.new(tags.head, nil, table.unpack(head_elements))
 end
 
 function elements.title(title)
   local t_title = type(title)
   assert(t_title == 'string', errmsgs.simple_wrongtypes('title', {'string'}, t_title))
 
-  return element.new(tags.title, title)
+  return element.new(tags.title, nil, title)
 end
 
 function elements.meta(meta_attributes)
@@ -93,7 +99,23 @@ function elements.body(body_elements)
     assert(element.is_element(body_elements[i]), errmsgs.simple_wrongtypes('body_elements['..i..']', {'Element'}, type(body_elements[i])))
   end
 
-  return element.new(tags.body, table.unpack(body_elements))
+  return element.new(tags.body, nil, table.unpack(body_elements))
+end
+
+function elements.strong(content)
+  if type(content) == 'string' then
+    return element.new(tags.strong, nil, content)
+  else
+    return element.new(tags.strong, nil, table.unpack(content))
+  end
+end
+
+function elements.p(content)
+  if type(content) == 'string' then
+    return element.new(tags.p, nil, content)
+  else
+    return element.new(tags.p, nil, table.unpack(content))
+  end
 end
 
 function elements.img(img_attributes)
