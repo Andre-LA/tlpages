@@ -36,8 +36,10 @@ local function element_to_string(element, level)
 
   local opening_tag = tag:tostring(false, element.attributes)
   local content = table.concat(element_content)
-  local should_close = #content > 0
-  local closing_tag = should_close and '\n' .. indentation .. tag:tostring(true) or ''
+  local closing_tag = tag:tostring(true)
+  if tag.closeable then
+    closing_tag ='\n' .. indentation .. closing_tag
+  end
 
   return string.format('%s%s%s', opening_tag, content, closing_tag)
 end

@@ -5,17 +5,17 @@ local element, tag = require 'lpages.element', require 'lpages.tag'
 -- Categorize contents (https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Content_categories)
 
 local tags = {
-  html = tag.new'html',
+  html = tag.new('html', true),
 
-  head = tag.new'head',
+  head = tag.new('head', true),
   meta = tag.new'meta',
-  title = tag.new'title',
+  title = tag.new('title', true),
 
-  body = tag.new'body',
+  body = tag.new('body', true),
 
   img = tag.new'img',
-  p = tag.new'p',
-  strong = tag.new'strong',
+  p = tag.new('p', true),
+  strong = tag.new('strong', true),
 }
 
 local elements = {}
