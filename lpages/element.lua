@@ -65,9 +65,7 @@ function Element.is_element(element)
 
   -- check tag
   local is_tag, tag_err = ltag.is_tag(element.tag)
-  if not is_tag then
-    table.insert(errors, tag_err)
-  end
+  assert(is_tag, tag_err)
 
   -- check attributes
   local t_attributes = type(element.attributes)
