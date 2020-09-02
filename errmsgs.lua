@@ -9,13 +9,11 @@ function errmsgs.simple_wrongtypes(varname, types_expected, type_got)
 end
 
 function errmsgs.multiple_msgs(errmsgs)
-  return string.format(
-    'got %d error%s:\n  - %s',
-    #errmsgs,
-    #errmsgs > 1 and 's' or '',
-    table.concat(errmsgs, '\n  - ')
-  )
-
+  if #errmsgs == 1 then
+    return errmsgs[1]
+  else
+    return string.format('got %d errors:\n  - %s', #errmsgs, table.concat(errmsgs, '\n  - '))
+  end
 end
 
 return errmsgs
