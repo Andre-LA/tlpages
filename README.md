@@ -1,2 +1,3 @@
-# lpages
-lua library to generate html
+# tlpages
+
+Teal library to generate html
