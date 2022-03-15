@@ -19,6 +19,10 @@ local function render_level(level: integer): string
 end
 
 function Element:render(level: integer): string
+  if not level then
+    level = 0
+  end
+
   local opening_tag = tag.render_opening_tag(self.name, self.attributes)
 
   if self.is_void then

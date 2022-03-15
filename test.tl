@@ -4,22 +4,19 @@
 -- SPDX-License-Identifier: MPL-2.0
 
 local Element = require 'tlpages.element'
+local Quick = require 'tlpages.quick'
 
-print(
-  Element.render(
-    { name = 'html', content = {
-        { name = 'head', content = {
-            { name = 'meta', attributes = {charset='utf-8'}, is_void = true, content = '' },
-            { name = 'title', content = 'MyPage' }
-          }
-        },
-        { name = 'body', content = {
-            {name = 'img', attributes = {alt = "My image doesn't exists yet :)"}, is_void = true}
-          }
-        }
-      }
+local page: Element = (
+  Quick 'html' {
+    Quick 'head' {
+      Quick 'meta' (nil, {charset = 'utf-8'}),
+      Quick 'title' 'My Page',
     },
 
-    0
-  )
+    Quick 'body' {
+      Quick 'img' (nil, {alt = "Without image yet"})
+    }
+  }
 )
+
+print(Element.render(page, 0))
