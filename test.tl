@@ -14,9 +14,13 @@ local page: Element = (
     },
 
     Quick 'body' {
+      Quick 'p' ('blablabla'),
+      Quick 'p' ('blablabla2\n'),
+      Quick 'p' ('bla bla \n bla blabla3'),
+      Quick 'p' ('bla bla \n bla blabla4\n'),
       Quick 'img' (nil, {alt = "Without image yet"})
     }
   }
 )
 
-print(Element.render(page, 0))
+print(Element.render(page))

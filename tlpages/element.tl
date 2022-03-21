@@ -34,7 +34,19 @@ function Element:render(level: integer): string
       end
 
       if content is string then
-        return content
+        local ends_with_nl = string.sub(content, -1) == '\n'
+        if ends_with_nl then
+          -- remove the new line ending character
+          content = string.sub(content, 1, -2)
+        end
+
+        local contains_nl = string.find(content as string, '\n') ~= nil
+        if contains_nl then
+          -- add indentation to these new lines
+          content = '\n' .. render_level(lvl) .. string.gsub(content as string, ' ?\n ?', '\n' .. render_level(lvl)) .. '\n' .. render_level(lvl-1)
+        end
+
+        return content as string
       else
         local result: {string} = {}
 
