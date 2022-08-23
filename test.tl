@@ -3,10 +3,11 @@
 -- Please refer to the LICENSE file for details
 -- SPDX-License-Identifier: MPL-2.0
 
-local Element = require 'tlpages.element'
 local Quick = require 'tlpages.quick'
 
-local page: Element = (
+local DOCTYPE = Quick '!DOCTYPE html' (nil)
+
+local page = (
   Quick 'html' {
     Quick 'head' {
       Quick 'meta' (nil, {charset = 'utf-8'}),
@@ -23,4 +24,7 @@ local page: Element = (
   }
 )
 
-print(Element.render(page))
+local file <close> = assert(io.open('test.html', 'w'), "file 'test.html' not found")
+file:write(table.concat({ DOCTYPE:render(), page:render() }, '\n'))
+
+

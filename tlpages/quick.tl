@@ -4,16 +4,15 @@ local type Attritutes = {string:string}
 
 local type QuickBuilder = function(elements: string | {Element}, attributes: Attritutes): Element
 
-return function (element_name: string): QuickBuilder
-  local fn = function(content: string | {Element}, attributes: Attritutes): Element
-    local element: Element = {
-      is_void = content == nil,
+local Quick = function (element_name: string): QuickBuilder
+  assert(element_name, "Quick: `element_name` must be given!")
+  return function(content: string | {Element}, attributes: Attritutes): Element
+    return Element.new {
       name = element_name,
       attributes = attributes,
       content = content
     }
-    return element
   end
-
-  return fn
 end
+
+return Quick

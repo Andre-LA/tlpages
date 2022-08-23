@@ -7,15 +7,25 @@ local tag = require 'tlpages.tag'
 
 local type Attritutes = {string:string}
 
+local function render_level(level: integer): string
+  return string.rep('  ', level)
+end
+
 local record Element
-  is_void: boolean
   name: string
   attributes: Attritutes
   content: string | {Element}
 end
 
-local function render_level(level: integer): string
-  return string.rep('  ', level)
+local Element_mt: metatable<Element> = {
+  __index = Element
+}
+
+function Element.new(init: Element): Element
+  assert(init, "Element.new: value `init` must be given!")
+  assert(init.name, "Element.new: value `init.name` must be given!")
+
+  return setmetatable(init, Element_mt)
 end
 
 function Element:render(level: integer): string
@@ -24,8 +34,9 @@ function Element:render(level: integer): string
   end
 
   local opening_tag = tag.render_opening_tag(self.name, self.attributes)
+  local is_void = self.content == nil
 
-  if self.is_void then
+  if is_void then
     return opening_tag
   else
     local function render_content(content: string | {Element}, lvl: integer): string
