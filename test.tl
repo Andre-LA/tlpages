@@ -18,13 +18,13 @@ local page = (
       Quick 'p' ('blablabla'),
       Quick 'p' ('blablabla2\n'),
       Quick 'p' ('bla bla \n bla blabla3'),
-      Quick 'p' ('bla bla \n bla blabla4\n'),
+      Quick 'p' ({'bla bla ', Quick 'strong' 'strong blah', 'bla bla' }),
       Quick 'img' (nil, {alt = "Without image yet"})
     }
   }
 )
 
-local file <close> = assert(io.open('test.html', 'w'), "file 'test.html' not found")
+local file = assert(io.open('test.html', 'w'), "file 'test.html' not found")
 file:write(table.concat({ DOCTYPE:render(), page:render() }, '\n'))
-
+file:close()
 

@@ -14,7 +14,7 @@ end
 local record Element
   name: string
   attributes: Attritutes
-  content: string | {Element}
+  content: string | { string | Element }
 end
 
 local Element_mt: metatable<Element> = {
@@ -39,7 +39,7 @@ function Element:render(level: integer): string
   if is_void then
     return opening_tag
   else
-    local function render_content(content: string | {Element}, lvl: integer): string
+    local function render_content(content: string | { string | Element }, lvl: integer): string
       if not content then
         return ''
       end
@@ -62,7 +62,11 @@ function Element:render(level: integer): string
         local result: {string} = {}
 
         for _, v in ipairs(content) do
-          table.insert(result, Element.render(v, lvl))
+          if v is string then
+            table.insert(result, v)
+          else
+            table.insert(result, Element.render(v, lvl))
+          end
         end
 
         if #result > 0 then
