@@ -5,7 +5,7 @@
 
 local tag = {}
 
-local type Attritutes = {string:string}
+local type Attritutes = {string:string | number}
 
 function tag.render_attributes(attributes: Attritutes): string
   if not attributes then
@@ -15,7 +15,7 @@ function tag.render_attributes(attributes: Attritutes): string
   local result: {string} = {}
 
   for k, v in pairs(attributes) do
-    table.insert(result, k .. '="' .. v .. '"') -- key="value"
+    table.insert(result, k .. '="' .. tostring(v) .. '"') -- key="value"
   end
 
   if #result > 0 then

@@ -1,6 +1,6 @@
 local Element = require 'tlpages.element'
 
-local type Attritutes = {string:string}
+local type Attritutes = {string:string | number}
 
 local type QuickBuilder = function(elements: string | { string | Element }, attributes: Attritutes): Element
 

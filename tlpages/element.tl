@@ -5,7 +5,7 @@
 
 local tag = require 'tlpages.tag'
 
-local type Attritutes = {string:string}
+local type Attritutes = {string:string | number}
 
 local function render_level(level: integer): string
   return string.rep('  ', level)
